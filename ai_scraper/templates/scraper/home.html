@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    {% if user.is_authenticated %}
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+  </form>
+{% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>FBI Wanted List</h2>
+        <div>
+            <button class="btn btn-outline-primary me-2" 
+                    hx-get="{% url 'show_change_log' %}" 
+                    hx-target="#changeLogModal .modal-body" 
+                    hx-trigger="click" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#changeLogModal">Change Log</button>
+
+            <button class="btn btn-outline-success" 
+                    hx-post="{% url 'trigger_scrape' %}" 
+                    hx-trigger="click" 
+                    hx-swap="none">Refresh</button>
+        </div>
+    </div>
+
+    <input type="search" name="search" class="form-control mb-3" placeholder="Search by name..." 
+           hx-get="{% url 'search_items' %}" 
+           hx-target="#items-list" 
+           hx-trigger="keyup changed delay:300ms">
+
+    <div id="items-list">
+        {% include 'scraper/partials/item_list.html' %}
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="changeLogModal" tabindex="-1" aria-labelledby="changeLogModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changeLogModalLabel">Change Log</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Loaded via HTMX -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

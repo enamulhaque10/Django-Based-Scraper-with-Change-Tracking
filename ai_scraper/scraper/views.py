@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from .models import ScrapedItem, ChangeLog
-#from .tasks import scrape_fbi_data
+from .tasks import scrape_fbi_data
 
 
 @login_required
@@ -27,7 +27,7 @@ def show_change_log(request):
     return HttpResponse(html)
 
 
-# @login_required
-# def trigger_scrape(request):
-#     scrape_fbi_data.delay()
-#     return JsonResponse({'message': 'Scrape started'})
+@login_required
+def trigger_scrape(request):
+    scrape_fbi_data.delay()
+    return JsonResponse({'message': 'Scrape started'})

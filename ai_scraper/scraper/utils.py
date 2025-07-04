@@ -4,8 +4,10 @@ from .models import ScrapedItem, ChangeLog
 
 def fetch_fbi_data():
     url = 'https://www.fbi.gov/wanted/topten'
+    print(url,'url')
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
+    print(response, 'response')
     
     new_items = []
     existing_titles = ScrapedItem.objects.values_list('title', flat=True)
